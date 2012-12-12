@@ -277,14 +277,42 @@
       </div>
     </div>
 
-    <div class="container marketing" style="padding-top: 100px;">
-      <h1>Electrical</h1>
-      <hr>
+    <div class="container marketing" style="padding-top: 100px; padding-left: 20px;">
+      <h2 class="featurette-heading">Electrical</h2>
+      <p>The brave electrical engineers on the Barbeux team faced two gargantuan tasks that only superhuman engineers could tackle: to control solenoid valves and servos using an Arduino, and measuring the right amount of liquid poured into the cup.  Despite these tasks being so immense that failure was assured, our fearless EE's rose to the occasion.</p>
+      <h2>Measurement</h2>
       <div class="row">
-        <div class="span4">asdfljasdjf      </div>
-        <div class="span8">adsfasdfasdfads  </div>
+        <div class="span8">
+          <p>We decided to measure liquid by weight. Early on, we realized that our desired precision was not particularly high; since a shot of liquor weighs around 50 grams, and a full cup of mixed drink weighs around 250 grams, we really only needed accuracy to within 10 grams to still make a reasonable drink.  However, we did need measurements to happen quickly: liquid pours fast, and so we need to measure frequently to stop the pour at the appropriate time.  We decided that weight would meet those goals best.  This had the advantage of only requiring one sensor and the added bonus of being incredibly inexpensive.  It did, however, require some reverse-engineering.</p>
+          <p>Rather than make our own sensor or purchase a load sensor, we decided to use one from a ubiquitous device: a scale. We purchased a few <a href="http://www.amazon.com/gp/product/B009NBTZ3U/ref=oh_details_o00_s00_i00">Crazy Cart 500g mini jewelry scales</a> and ripped out their sensors.  Despite being only $5, they're pretty accurate - they'll tell you a penny is 2.5 grams any day of the week. </p>
+          <p>A load sensor, as it turns out, is a little bar of metal with a funny-shaped hole cut through. Above the hole, there's a variable resistor in the middle of a <a href="http://en.wikipedia.org/wiki/Wheatstone_bridge">Wheatstone Bridge</a>.  We measured the voltage across the bridge, and found the voltage was around 1 milliVolt - far too low to measure with an Arduino, which can measure, at its most precise, a few milliVolts.  We needed to amplify that signal up to a level where the Arduino could read it. </p>
+          <p>To amplify, we used an AD623AN instrumentational amplifier, which bumped the voltage up by a hundredfold - easily read by the Arduino.  We were able to read the scale, and calibrate it quickly.</p>
+        </div>
+        <div class="span4">
+          <img src="img/Electrical/straingauge.jpg" width="300px">
+          <div style="clear: both">A strain gauge.</div>
+        </div>
       </div>
+      <br>
+      <center>
+      <div class="row">
+        <div class="span6"><img src="img/Electrical/scale_uncalibrated.jpg" width="300px"></div>
+        <div class="span6"><img src="img/Electrical/scale_readings.jpg" width="300px"></div>
+      </div>
+      <div style="margin-top: 10px"><em>Above: Our test scale read 195.9 grams for a stack of wood, and our circuit read around 197.3.  That's less than 1% error, and the readings tended not to fluctuate a lot from one reading to the next.</em></div></center>
       
+      <h2>Solenoid Valves</h2>
+
+      <div class="row">
+        <div class="span8">
+          <p>We controlled liquid pouring with <a href="http://en.wikipedia.org/wiki/Solenoid_valve">solenoid valves</a>.  These are magnetically-controlled valves that open when DC current passes through.  Ours were rated for around 12 Volts, which is higher than the Arduino could output directly.  We needed to amplify this output.</p>
+          <p>The simplest way to use a low voltage to trigger a higher voltage is to use a transistor.  The TIP120 Darlington NPN transistor has three pins, called the emitter, collector, and base.  It allows current to flow from its collector to its emitter when current flows through its base. When we write a high voltage to the base, current flows.  The beauty is that the emitter and collector are connected to an external power supply, for us, around 20 V, and the current draw on the Arduino is very low.  </p>
+        </div>
+        <div class="span4">
+          <img src="img/Electrical/transistor.png" width="200px">
+          <div><em>This photo shows three transistors connected to the digital outputs of the Arduino.  The third transistor has two wires connecting the transistor to ground, so when pin 3 is written to HIGH, current will flow through those wires and into the solenoid.</div></em>
+        </div>
+      </div>
       <!-- FOOTER -->
       <footer>
         <hr>
