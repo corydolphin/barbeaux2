@@ -286,7 +286,6 @@
           <p>We decided to measure liquid by weight. Early on, we realized that our desired precision was not particularly high; since a shot of liquor weighs around 50 grams, and a full cup of mixed drink weighs around 250 grams, we really only needed accuracy to within 10 grams to still make a reasonable drink.  However, we did need measurements to happen quickly: liquid pours fast, and so we need to measure frequently to stop the pour at the appropriate time.  We decided that weight would meet those goals best.  This had the advantage of only requiring one sensor and the added bonus of being incredibly inexpensive.  It did, however, require some reverse-engineering.</p>
           <p>Rather than make our own sensor or purchase a load sensor, we decided to use one from a ubiquitous device: a scale. We purchased a few <a href="http://www.amazon.com/gp/product/B009NBTZ3U/ref=oh_details_o00_s00_i00">Crazy Cart 500g mini jewelry scales</a> and ripped out their sensors.  Despite being only $5, they're pretty accurate - they'll tell you a penny is 2.5 grams any day of the week. </p>
           <p>A load sensor, as it turns out, is a little bar of metal with a funny-shaped hole cut through. Above the hole, there's a variable resistor in the middle of a <a href="http://en.wikipedia.org/wiki/Wheatstone_bridge">Wheatstone Bridge</a>.  We measured the voltage across the bridge, and found the voltage was around 1 milliVolt - far too low to measure with an Arduino, which can measure, at its most precise, a few milliVolts.  We needed to amplify that signal up to a level where the Arduino could read it. </p>
-          <p>To amplify, we used an AD623AN instrumentational amplifier, which bumped the voltage up by a hundredfold - easily read by the Arduino.  We were able to read the scale, and calibrate it quickly.</p>
         </div>
         <div class="span4">
           <img src="img/Electrical/straingauge.jpg" width="300px">
@@ -294,25 +293,37 @@
         </div>
       </div>
       <br>
-      <center>
       <div class="row">
-        <div class="span6"><img src="img/Electrical/scale_uncalibrated.jpg" width="300px"></div>
-        <div class="span6"><img src="img/Electrical/scale_readings.jpg" width="300px"></div>
+        <div class="span4"><img src="img/Electrical/scale_uncalibrated.jpg" width="400px"></div>
+        <div class="span4"><img src="img/Electrical/scale_readings.jpg" width="400px"></div>
+       <div class="span4"><p style="text-align: left">Once we were able to read the voltage from the scale, we were delighted to see that the voltage-to-weight relationship was linear, and so it was very easy to calibrate.  We got some pretty great accuracy from the scale - we were within 1% accurate to our test scale, and tended to have a nice tight dataset, though electrical noise could cause that to jump a good amount.  Especially bearing in mind that we only needed a +/- 10 grams of accuracy, an error of less than two grams was more than enough for us.  Practically, that error was even lower, especially because after every single pour we zero'd the scale (and so errors do not compound).</p>
       </div>
-      <div style="margin-top: 10px"><em>Above: Our test scale read 195.9 grams for a stack of wood, and our circuit read around 197.3.  That's less than 1% error, and the readings tended not to fluctuate a lot from one reading to the next.</em></div></center>
-      
+    </div>
+    <br>
+      <div class="row">
+        <div class="span5"><p>We made the amplification circuit using an AD623an.  This is an instrumentational amplifier, which outputs an amplified difference between two signals. Since we were measuring a Wheatstone bridge, we were getting a voltage difference, not an absolute voltage, so this was the perfect chip for the job.</p>
+          <p>We read the output of the AD623an into one of the analog read ports of the Arduino.  However, we were a little discouraged with the raw data: it was basically garbage.  The variation from one data point to the next was enormous, and we were only able to minimize that variance if we took at least 10,000 samples and averaged them.  That worked, but took around a second - that was too slow for us.  Lucky for us, you can change the sampling rate of the Arduino, and we were able to get about a fourfold increase in sample rate - which let us quadruple our speed, with no drawbacks.</p></div>
+        <div class="span4"><img src="img/Electrical/amplifier.png" width="400px"></div>
+        <div class="span3"><img src="img/Electrical/ad623an.jpg" width="300px"></div>
+      </div>
+
+
+
       <h2>Solenoid Valves</h2>
 
       <div class="row">
-        <div class="span8">
+      <div class="span4"><img src="img/Electrical/solenoid.png">
+        <em style="display: block; clear:both;">The transistor acts as switch here, taking an order from the Arduino as to allow current to flow through the solenoid valve or not. </em></div>
+        <div class="span4" style="text-align: left;">
           <p>We controlled liquid pouring with <a href="http://en.wikipedia.org/wiki/Solenoid_valve">solenoid valves</a>.  These are magnetically-controlled valves that open when DC current passes through.  Ours were rated for around 12 Volts, which is higher than the Arduino could output directly.  We needed to amplify this output.</p>
           <p>The simplest way to use a low voltage to trigger a higher voltage is to use a transistor.  The TIP120 Darlington NPN transistor has three pins, called the emitter, collector, and base.  It allows current to flow from its collector to its emitter when current flows through its base. When we write a high voltage to the base, current flows.  The beauty is that the emitter and collector are connected to an external power supply, for us, around 20 V, and the current draw on the Arduino is very low.  </p>
         </div>
         <div class="span4">
-          <img src="img/Electrical/transistor.png" width="200px">
+          <img src="img/Electrical/transistor.png" style="width:300px">
           <div><em>This photo shows three transistors connected to the digital outputs of the Arduino.  The third transistor has two wires connecting the transistor to ground, so when pin 3 is written to HIGH, current will flow through those wires and into the solenoid.</div></em>
         </div>
       </div>
+
       <!-- FOOTER -->
       <footer>
         <hr>
