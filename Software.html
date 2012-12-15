@@ -10,6 +10,11 @@
 
     <!-- Le styles -->
     <link href="//netdna.bootstrapcdn.com/twitter-bootstrap/2.2.2/css/bootstrap-combined.min.css" rel="stylesheet">
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>
+    <script src="lightbox/js/jquery-ui-1.8.18.custom.min.js"></script>
+    <script src="lightbox/js/jquery.smooth-scroll.min.js"></script>
+    <script src="lightbox/js/lightbox.js"></script>
+    <link href="lightbox/css/lightbox.css" rel="stylesheet" />
     <style>
 
     /* GLOBAL STYLES
@@ -282,8 +287,30 @@
 
     <div class="container marketing" style="padding-top: 100px;">
       <h2 class="featurette-heading">Software</h2>
-      <p>The brave bit-bopping software engineers on the Barbeaux team solved problems worth only of evil geniuses: convince an old tablet to talk to an Arduino. The fun part? This tablet did not natively support USB Host, forming serial connections or any of the niceties that the Arduino drivers often supply on the typical slew of PCs</p>
-      <!-- FOOTER -->
+      <div class="row">
+        <div class="span6">
+        <p >The brave bit-bopping software engineers on the Barbeaux team solved problems worth only of evil geniuses: convince an old tablet to speak with an Arduino and build an Android application to abstract this communication into a beautiful and intuitive interface. The fun part? This tablet did not natively support USB Host, forming serial connections or any of the niceties that the Arduino drivers often supply on the typical slew of PCs.</p>
+        <p >
+          The software component of this project involved both an Arduino and an Android tablet, as mentioned. Because of the nature of the two systems, 
+            each device performed different tasks:
+        </p>
+      </div>
+       <!-- FOOTER -->
+          <img class="span4 offset1" style="text-align:center;" src="img/Software/ommunication.jpg" >
+        </div>
+      <h2>Overview</h2>
+
+      <div class="row">
+        <div class="span6" style="float:left;">
+          <h3>Android</h3>
+          <p>The Barbeaux is fitted with an HP Touchpad running an Android application specifically designed to allow users to select beverages and to act as the true "brain" of the operation, maintaining knowledge of the state of Barbeaux, the position of different beverages and driving communications.</p>
+        </div>
+        <div class="span6" style="float:right;">
+        <h3>Arduino</h3>
+          <p>An Arduino microcontroller is embedded invisibly within the Barbeaux in order to communicate with the servos and solenoid valves used to make beverages. In our design, the Arduino is a stateless device with no memory of the state of the system, merely receiving commands from the Android and acting upon them.</p>
+
+        </div>
+      </div>
 
 
       <h2>Talking USB</h2>
@@ -292,7 +319,7 @@
           <p>Taking an HP Touchpad running the discontinued WebOS, and convincing it to act as a USB host represented an interesting challenge. While most mobile devices use USB to communicate with a desktop PC, the PC acts as the USB host, recognizing the device and providing the drivers required to interface with the device. On the HP Touchpad? No such luck.</p>
           <p>The solution? Rebuild, retest and retest again. Luckily, the HP Touchpad is fairly flexibile, fundamentally running an ARM linux kernel. As with most hacks these days, the solution was to then convince the device to run Android, opting for the common Cyanogen Mod port of Android. After installing Android, the process of exploring the intricacies of kernel modules continued; after trying a number of different kernels, compiling more than a fair share of modules and bricking the device multiple times, we were able to compile and load a kernel which supported USB Host, solving about half of the problem</p>
         </div>
-        <div class="span4">
+        <div class="span4" style="float:left;">
           <img src="img/Software/cm9.jpg" width="300px">
           <div style="clear: both">A somewhat friendly robot</div>
         </div>
@@ -303,7 +330,7 @@
           <p>Now able to communicate with generic USB devices, such as old keyboards and mice, we were able to approach the Arduino and begin a conversation.</p>
           <p>Building off of an amazing open source Android application, <a href="https://github.com/jeppsson/Arduino-Communicator">Arduino Communicator</a>, we were able to quickly get started commnicating with the Arduino. As with any open source project, we hd a few interesting hurdles, specifically around line encodings and recognizing the newer Arduino Uno Rev3. </p>
           <p>
-            Without Arduino's serial drivers able to handle opening a serial communication line, and configuring the Arduino and the host to pass messages using the same encoding scheme, we had the pleasure of convincing the two devices to play nice, refreshing our knowledge of hex and learning about USB control commands:
+            Without Arduino's serial drivers able to handle opening a serial communication line, and configuring the Arduino and the host to pass messages using the same encoding scheme, we had the pleasure of convincing the two devices to play nice, refreshing our knowledge of hex and learning about USB control commands.
           </p>
         </div>
         <div class="span4">
@@ -313,9 +340,32 @@ mUsbConnection.controlTransfer(0x21, 0x22, 0, 0, null, 0, 0);
 // Set line encoding.
 mUsbConnection.controlTransfer(0x21, 0x20, 0, 0, getLineEncoding(9600), 7, 0);
 </pre>
-          <div style="clear: both">A somewhat friendly robot</div>
+          <div style="clear: both">Establishing a serial connection and setting the line encoding</div>
         </div>
       </div>
+
+
+      <h2>The Application</h2>
+      <div class="row">
+        <div class="span6">
+          <p>The application itself has three main pages: the menu page, the drink biography page and the ordering drink page.</p>
+          <p>When first loaded, the user is shown the order page, from which they can select any beverage to order.</p>
+        </div>
+      </div>
+
+      <div class="row" style="text-align:center;">
+        <div class="span4">
+        <h3>Menu Page</h3>
+        <a href="img/Software/menu.png"  rel="lightbox" title="Menu Page" class="span2"><img src="img/Software/menu.png"></img></a>
+        </div>
+        <div class="span4">
+        <h3>Drink Biography Page</h3>
+        </div>
+        <div class="span4">
+        <h3>Order Drink Page</h3>
+        </div>        
+      </div>
+    </div>
 
       <footer>
         <hr>
